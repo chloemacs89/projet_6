@@ -1,0 +1,1 @@
+# Algorithme pour AlgoInvest&Trade
