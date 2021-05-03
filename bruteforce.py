@@ -1,6 +1,6 @@
 from itertools import combinations
 import csv
-
+import sys
 
 def make_list_from_csv(csv_file):
     with open(csv_file, newline='') as csv_f:
@@ -10,11 +10,11 @@ def make_list_from_csv(csv_file):
             if not i:
                 pass
             else:
-                share_list.append((row[0], int(row[1]), float(row[2]) * int(row[1])))
+                share_list.append((row[0], float(row[1]), float(row[2])/100 * float(row[1])))
 
         return share_list
 
-shares_list = make_list_from_csv("./actions.csv")
+shares_list = make_list_from_csv(sys.argv[1])
 
 
 def every_combinations(items_list):

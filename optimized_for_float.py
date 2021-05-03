@@ -10,12 +10,11 @@ def make_list_from_csv(csv_file):
             if not i:
                 pass
             else:
-                share_list.append((row[0], float(row[1]), float(row[2])/100 * float(row[1])))
+                share_list.append((row[0], abs(int(float(row[1])*100)), float(row[2])/100 * float(row[1])))
     return share_list
 
 
 shares_list = make_list_from_csv(sys.argv[1])
-
 
 def total_value(combination):
     total_profit = 0
@@ -23,7 +22,7 @@ def total_value(combination):
     for share, val, profit in combination:
         total_profit += profit
         total_val += val
-    if total_val <= 500:
+    if total_val <= 500*100:
         return (total_val, total_profit)
     else:
         return (0, 0)
@@ -39,8 +38,11 @@ def knapsack_algorithm(shares_list, max_limit):
             if val > j:
                 table[i][j] = table[i-1][j]
             else:
-                table[i][j] = max(table[i-1][j],
-                                  table[i-1][j - int(val)] + profit)
+                try:
+                    table[i][j] = max(table[i-1][j],
+                                      table[i-1][j - int(val)] + profit)
+                except IndexError:
+                    import pdb; pdb.set_trace()
 
     best_result = []
     limit = max_limit
@@ -56,15 +58,12 @@ def knapsack_algorithm(shares_list, max_limit):
     return best_result
 
 
-max_profit = knapsack_algorithm(shares_list, 500)
+max_profit = knapsack_algorithm(shares_list, 50000)
 
 share_to_buy = total_value(max_profit)
 
 print("Buy the following shares : ",
       ", ".join([share for share, _, _ in max_profit]))
 
-print("For a price of : ", share_to_buy[0])
-print("And a profit of : ",
-      (500-share_to_buy[0])
-      + share_to_buy[0]
-      + share_to_buy[1])
+print("For a price of : ", share_to_buy[0]/100)
+print("And a profit of : ", share_to_buy[1])
